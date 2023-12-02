@@ -34,6 +34,9 @@ class Sussy(App):
         oldPoo = poo
 
         while True:
+            if macropad.encoder_switch == 1:
+                break
+
             key_event = macropad.keys.events.get()
             if key_event and key_event.pressed and key_event.key_number == 0:
                 oldPoo = poo
@@ -73,4 +76,3 @@ class Tester(Program):
         text_lines[2].text = "in 2s"
         text_lines.show()
         time.sleep(2)
-
