@@ -18,9 +18,8 @@ def getIdx(offset: int) -> int:
 
 
 text_lines = macropad.display_text(title="======= Menu =======")
-text_lines.show()
 
-oldState = -1
+oldState = 0.5 # placeholder value
 
 while True:
 
@@ -30,6 +29,7 @@ while True:
         text_lines[0].text = applications[getIdx(offset=-1)].name
         text_lines[1].text = "> " + applications[getIdx()].name
         text_lines[2].text = applications[getIdx(offset=1)].name
+        text_lines.show()
 
     if macropad.encoder_switch == 1:
         text_lines[1].text = " >" + applications[getIdx()].name
