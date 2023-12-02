@@ -1,42 +1,43 @@
 import time
+import Apps
 from adafruit_macropad import MacroPad
 
-macroPad = MacroPad()
+macropad = MacroPad()
 
-applications = ["The",
-                "Quick",
-                "Brown",
-                "idk",
-                "hello",
-                "goodbye",
-                ]
+applications = [
+    Apps.TicTacToe(macropad),
+    Apps.Sussy(macropad),
+    Apps.Snake(macropad),
+    Apps.Tester(macropad),
+]
 
-text_lines = macroPad.display_text(title="======= Menu =======")
+
+def getIdx(offset: int) -> int:
+    """gets index of application from encoder"""
+    return (macropad.encoder + offset) % len(applications)
+
+
+text_lines = macropad.display_text(title="======= Menu =======")
+text_lines[0].text = applications[getIdx(offset=-1)].name
+text_lines[1].text = "> " + applications[getIdx()].name
+text_lines[2].text = applications[getIdx(offset=1)].name
 text_lines.show()
 
-text_lines[0].text = applications[(macroPad.encoder-1) % len(applications)]
-text_lines[1].text = "> " + applications[(macroPad.encoder) % len(applications)]
-text_lines[2].text = applications[(macroPad.encoder+1) % len(applications)]
-
-# print(applications[(macroPad.encoder-1) % len(applications)])
-# print("> " + applications[(macroPad.encoder) % len(applications)])
-# print(applications[(macroPad.encoder+1) % len(applications)])
-
-oldState = 0;
+oldState = 0
 
 while True:
 
-    encoderPosition = macroPad.encoder
+    encoderPosition = macropad.encoder
 
     if encoderPosition != oldState:
-        text_lines[0].text = applications[(encoderPosition-1) % len(applications)]
-        text_lines[1].text = "> " + applications[(encoderPosition) % len(applications)]
-        text_lines[2].text = applications[(encoderPosition+1) % len(applications)]
+        text_lines[0].text = applications[getIdx(offset=-1)].name
+        text_lines[1].text = "> " + applications[getIdx()].name
+        text_lines[2].text = applications[getIdx(offset=1)].name
 
-    if macroPad.encoder_switch == 1:
-        text_lines[1].text = " >" + applications[(encoderPosition) % len(applications)]
-        time.sleep(.25)
-        text_lines[1].text = "> " + applications[(encoderPosition) % len(applications)]
+    if macropad.encoder_switch == 1:
+        text_lines[1].text = " >" + applications[getIdx()].name
+        time.sleep(0.25)
+        applications[getIdx()].run()
+        text_lines[1].text = "> " + applications[getIdx()].name
 
     oldState = encoderPosition
-    time.sleep(0.1)
