@@ -70,6 +70,8 @@ class Tester(Program):
         self.name = "tester"
 
     def run(self):
+        macropad = self.macropad 
+        
         text_lines = macropad.display_text(title="======= test =======")
         text_lines[0].text = "test app"
         text_lines[1].text = "will close"
