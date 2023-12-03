@@ -1,6 +1,13 @@
 import time
 from adafruit_macropad import MacroPad
 
+from rainbowio import colorwheel
+from adafruit_macropad import MacroPad
+
+import displayio # must figure out how to get display to work
+import board
+
+
 
 class App:
     def __init__(self, macropad):
@@ -10,6 +17,29 @@ class App:
     def run(self):
         pass
 
+class aScale(App):
+    def __init__(self, macropad):
+        self.macropad = macropad
+        self.name = "A Scale"
+
+    def run(self):
+        tones = [831, 880, 932, 988, 1047, 1109, 1175, 1245, 1319, 1397, 1480, 1568]
+        macropad = self.macropad
+
+        while True:
+            if macropad.encoder_switch == 1:
+                break
+
+            key_event = macropad.keys.events.get()
+
+            if key_event:
+                if key_event.pressed:
+                    macropad.pixels[key_event.key_number] = colorwheel(int(255/12) * key_event.key_number)
+                    macropad.start_tone(tones[key_event.key_number])
+
+                else:
+                    macropad.pixels.fill((0, 0, 0))
+                    macropad.stop_tone()
 
 class TicTacToe(App):
     def __init__(self, macropad):
@@ -26,10 +56,8 @@ class TicTacToe(App):
             1: "O",
         }
 
-        print(backend[0][0])
-
         for i in range(3):
-            text_lines[i].text = BOARD_DICT[backend[i][0]] + BOARD_DICT[backend[i][1]] + BOARD_DICT[backend[i][2]]
+            text_lines[i+1].text = "         " + BOARD_DICT[backend[i][0]] + BOARD_DICT[backend[i][1]] + BOARD_DICT[backend[i][2]]
 
         text_lines.show()
 
@@ -89,6 +117,32 @@ class TicTacToe(App):
                 else: # no key is pressed
                     button_held = False
 
+
+class imgTest(App): #this must be figured out
+    def __init__(self, macropad):
+        self.macropad = macropad
+        self.name = "Image Test"
+
+    def run(self):
+        macropad = self.macropad
+
+        splash = displayio.Group()
+        board.DISPLAY.root_group = splash
+
+
+        bitmap = displayio.Bitmap(128, 64, 2)
+        palette = displayio.Palette(2)
+
+        palette[0] = 0x000000
+        palette[1] = 0xFFFFFF
+
+        bitmap.fill(1)
+        splash = bitmap
+
+
+        while True:
+            if macropad.encoder_switch == 1:
+                break
 
 class Sussy(App):
     def __init__(self, macropad):

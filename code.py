@@ -9,6 +9,8 @@ applications = [
     Apps.Sussy(macropad),
     Apps.Snake(macropad),
     Apps.Tester(macropad),
+    Apps.aScale(macropad),
+    Apps.imgTest(macropad),
 ]
 
 
