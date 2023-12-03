@@ -27,14 +27,16 @@ while True:
 
     if encoderPosition != oldState:
         text_lines[0].text = applications[getIdx(offset=-1)].name
-        text_lines[1].text = "> " + applications[getIdx()].name
+        text_lines[1].text = "> " + applications[getIdx(offset=0)].name
         text_lines[2].text = applications[getIdx(offset=1)].name
         text_lines.show()
 
     if macropad.encoder_switch == 1:
-        text_lines[1].text = " >" + applications[getIdx()].name
+        text_lines[1].text = " >" + applications[getIdx(offset=0)].name
         time.sleep(0.25)
-        applications[getIdx()].run()
-        text_lines[1].text = "> " + applications[getIdx()].name
+        applications[getIdx(offset=0)].run()
+        text_lines.show()
+        time.sleep(0.25)
+        text_lines[1].text = "> " + applications[getIdx(offset=0)].name
 
     oldState = encoderPosition
