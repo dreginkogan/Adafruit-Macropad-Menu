@@ -1,5 +1,6 @@
 Menu and application system for Adafruit's MacroPad. This can also be adapted to other circuitpython-based devices.
 
+Written for CircuitPython 8.2.9
 
 # Links
 Before putting the code onto the macropad, first set it up via instructions at: https://learn.adafruit.com/adafruit-macropad-rp2040/circuitpython
