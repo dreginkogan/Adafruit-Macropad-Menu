@@ -11,6 +11,7 @@ applications = [
     Apps.Tester(macropad),
     Apps.aScale(macropad),
     Apps.imgTest(macropad),
+    Apps.Conway(macropad),
 ]
 
 
