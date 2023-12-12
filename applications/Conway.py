@@ -1,7 +1,9 @@
 import displayio
 import random
+import Apps
+import board
 
-class Conways(App):
+class Conways(Apps.App):
     def __init__(self, macropad):
         self.macropad = macropad
         self.name = "Conway's GOL"
