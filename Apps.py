@@ -1,12 +1,9 @@
 import time
 from adafruit_macropad import MacroPad
 
-import random # for test
-
 from rainbowio import colorwheel
 from adafruit_macropad import MacroPad
 
-import displayio # must figure out how to get display to work
 import board
 
 
@@ -29,8 +26,8 @@ class Conway(App):
                 bitmap[x, y] = random.randint(0,1)
 
     def updateGrid(self, old, new): ##creates new grid according to rules of conways game of life
-
-        width = old.width # code taken from adafruit
+        # code taken from adafruit
+        width = old.width 
         height = old.height
         for y in range(height):
             yyy = y * width
@@ -64,15 +61,8 @@ class Conway(App):
         tiles1 = displayio.TileGrid(bitmap1, pixel_shader=palette) # create tile grid using bitmap and palette
         tiles2 = displayio.TileGrid(bitmap2, pixel_shader=palette)
 
-
         group1.append(tiles1) # append tiles to group, to be displayed
         group2.append(tiles2)
-
-        # bitmap1[2, 4] = 1
-        # bitmap1[3, 5] = 1
-        # bitmap1[4, 5] = 1
-        # bitmap1[4, 4] = 1
-        # bitmap1[4, 3] = 1
 
         self.scramble(bitmap1)
 
@@ -85,10 +75,6 @@ class Conway(App):
             board.DISPLAY.root_group = group2 #set root group
             self.updateGrid(bitmap2, bitmap1)
 
-
-            # for x in range(conBitmap.width): # too slow
-            #     for y in range(conBitmap.height):
-            #         conBitmap[x,y] = arr[x][y]
 
 class Snake(App):
     def __init__(self, macropad):
@@ -275,20 +261,3 @@ class Sussy(App):
                     print("cindy is a meow meow")
             oldPoo = poo
             time.sleep(0.1)
-
-class Tester(App):
-    def __init__(self, macropad):
-        self.macropad = macropad
-        self.name = "tester"
-
-    def run(self):
-        macropad = self.macropad
-
-        text_lines = macropad.display_text(title="======= test =======")
-        text_lines.show()
-        text_lines[0].text = "test app"
-        text_lines[1].text = "will close"
-        text_lines[2].text = "in 2s"
-        time.sleep(1)
-        text_lines[2].text = "in 1s"
-        time.sleep(1)

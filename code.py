@@ -1,5 +1,7 @@
 import time
 import Apps
+import test
+
 from adafruit_macropad import MacroPad
 
 macropad = MacroPad()
@@ -8,10 +10,10 @@ applications = [
     Apps.TicTacToe(macropad),
     Apps.Sussy(macropad),
     Apps.Snake(macropad),
-    Apps.Tester(macropad),
+    Test.Tester(macropad),
     Apps.aScale(macropad),
     Apps.imgTest(macropad),
-    Apps.Conway(macropad),
+    Conway.Conways(macropad),
 ]
 
 
