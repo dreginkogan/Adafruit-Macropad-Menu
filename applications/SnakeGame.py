@@ -27,7 +27,7 @@ class Snake(Apps.App):
 
     def showSnake(self, turnArr, currPos, startPos, length, tileGrid): # length = int
         drawArr = []
-        drawArr.append(currPos)
+        drawArr.append(currPos.copy())
         if turnArr != []:
             drawArr.extend(turnArr) # extend adds elements of an array to another list, instead of just adding a whole array to the end
         drawArr.append(startPos)
@@ -35,32 +35,39 @@ class Snake(Apps.App):
         drawColor = 1
         count = 1
 
+        # implement anti flickering algorithm
+        # if amount of elemets already shwon in new array, dont bother resetting them, only set new ones
+        # the snake is tweaking so hard
+
+        # maybe only worry about updating the first and last segments?
+
         for i in range(len(drawArr)-1):
             startPoint = drawArr[i]
             endPoint = drawArr[i+1]
 
-            tempLoc = drawArr[0]
+            tempLoc = startPoint.copy()
+
+            difX = drawArr[i+1][0]-drawArr[i][0]
+            difY = drawArr[i+1][1]-drawArr[i][1]
 
             while tempLoc != endPoint: # if it gets to drawing the end point, stop
                 if (count>length):
                     drawColor = 0
+                    # print(tempLoc)
 
-                difX = drawArr[i+1][0]-drawArr[i][0]
-                print(f"x dif is {difX}")
-                difY = drawArr[i+1][1]-drawArr[i][1]
+                if difX<0:
+                    tempLoc[0] = tempLoc[0] - 1
+                elif difX>0:
+                    tempLoc[0] = tempLoc[0] + 1
 
-                tempLoc[0] = tempLoc[0] + difX
-                tempLoc[1] = tempLoc[1] + difY
+                if difY<0:
+                    tempLoc[1] = tempLoc[1] - 1
+                elif difY>0:
+                    tempLoc[1] = tempLoc[1] + 1
 
-                print(tempLoc)
-                print(endPoint)
+                tileGrid[tempLoc[0], tempLoc[1]] = drawColor
 
-            # make unified equation for printing the points onto tilegrid
-
-
-
-        # print(drawArr)
-
+                count = count + 1
         return
 
 
@@ -78,6 +85,11 @@ class Snake(Apps.App):
         bitmap[3,0] = 1
         bitmap[2,1] = 1
         bitmap[3,1] = 1
+
+        bitmap[4,0] = 1
+        bitmap[5,1] = 1
+        bitmap[6,1] = 1
+        bitmap[7,0] = 1
         # bitmap = displayio.OnDiskBitmap('/snakeSource.bmp')
 
         palette = displayio.Palette(2) #2 colors
@@ -109,16 +121,16 @@ class Snake(Apps.App):
             if key_event:
                 if key_event.pressed:
                     bendArr.insert(0, currPos.copy())
-                    if key_event.key_number == 1:
+                    if key_event.key_number == 1 and snakeDir != 2:
                         snakeDir = 0
                         print("up")
-                    if key_event.key_number == 3:
+                    if key_event.key_number == 3 and snakeDir != 1:
                         snakeDir = 3
                         print("left")
-                    if key_event.key_number == 4:
+                    if key_event.key_number == 4 and snakeDir != 0:
                         snakeDir = 2
                         print("down")
-                    if key_event.key_number == 5:
+                    if key_event.key_number == 5 and snakeDir != 3:
                         snakeDir = 1
                         print("right")
 
@@ -132,19 +144,7 @@ class Snake(Apps.App):
                 currPos[0] = currPos[0]-1
 
             if currPos[0]<0 or currPos[0]>63 or currPos[1]<0 or currPos[1]>31:
+                time.sleep(.25)
                 break 
 
         
-            if not currPos == oldPos: # currently does the drawing for length 1
-                tiles[currPos[0], currPos[1]] = 1
-                tiles[oldPos[0], oldPos[1]] = 0
-
-            self.showSnake(bendArr, currPos, startPos, 1, tiles)
-            time.sleep(0.2)
-            # print(bendArr)
-
-
-
-            
-
-                
