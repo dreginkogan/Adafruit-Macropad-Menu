@@ -25,21 +25,16 @@ class Snake(Apps.App):
         return spawnLoc
 
 
-    def showSnake(self, turnArr, currPos, startPos, length, tileGrid): # length = int
-        drawArr = []
-        drawArr.append(currPos.copy())
-        if turnArr != []:
-            drawArr.extend(turnArr) # extend adds elements of an array to another list, instead of just adding a whole array to the end
-        drawArr.append(startPos)
+    def showSnake(self, drawArr, length, tileGrid): # length = int
 
         drawColor = 1
         count = 1
 
-        # implement anti flickering algorithm
-        # if amount of elemets already shwon in new array, dont bother resetting them, only set new ones
-        # the snake is tweaking so hard
+        print(f"sussy amogus {drawArr}")
 
-        # maybe only worry about updating the first and last segments?
+        if len(drawArr)>length+1:
+            del drawArr[length+1:]
+
 
         for i in range(len(drawArr)-1):
             startPoint = drawArr[i]
@@ -51,7 +46,7 @@ class Snake(Apps.App):
             difY = drawArr[i+1][1]-drawArr[i][1]
 
             while tempLoc != endPoint: # if it gets to drawing the end point, stop
-                if (count>length):
+                if count>length and drawColor != 0: # maybe turning the frown upside down will help?
                     drawColor = 0
                     # print(tempLoc)
 
@@ -65,8 +60,10 @@ class Snake(Apps.App):
                 elif difY>0:
                     tempLoc[1] = tempLoc[1] + 1
 
-                tileGrid[tempLoc[0], tempLoc[1]] = drawColor
+                # if tileGrid[tempLoc[0], tempLoc[1]] != drawColor: #maybe this will stop the tweaking???
+                tileGrid[tempLoc[0], tempLoc[1]] = drawColor # it did not fix it
 
+                # the flickering does not happen when all the squares would be drawn white
                 count = count + 1
         return
 
@@ -105,10 +102,14 @@ class Snake(Apps.App):
         currPos = [32, 16]
         startPos = currPos.copy()
 
-        snakeArr = [[currPos[0], currPos[1]]] # put initial location into the snake array
-        bendArr = []
+        # snakeArr = [[currPos[0], currPos[1]]] # put initial location into the snake array
+        bendArr = [currPos.copy()]
+        bendArr.append(startPos)
+
 
         snakeDir = 0
+
+        snakeLength = 17;
 
         while True:
             if macropad.encoder_switch == 1:
@@ -116,11 +117,13 @@ class Snake(Apps.App):
 
             key_event = macropad.keys.events.get()
 
-            oldPos  = currPos
+            oldPos  = currPos.copy()
+
+            bendArr[0] = currPos.copy()
 
             if key_event:
                 if key_event.pressed:
-                    bendArr.insert(0, currPos.copy())
+                    bendArr.insert(1, currPos.copy())
                     if key_event.key_number == 1 and snakeDir != 2:
                         snakeDir = 0
                         print("up")
@@ -147,4 +150,19 @@ class Snake(Apps.App):
                 time.sleep(.25)
                 break 
 
+            print(bendArr)
+
         
+            # if not currPos == oldPos: # currently does the drawing for length 1
+            #     tiles[currPos[0], currPos[1]] = 1
+            #     tiles[oldPos[0], oldPos[1]] = 0
+
+            self.showSnake(bendArr, 3, tiles)
+            time.sleep(0.05)
+            # print(currPos)
+
+
+
+            
+
+                
