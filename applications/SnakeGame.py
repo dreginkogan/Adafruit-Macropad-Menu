@@ -24,11 +24,28 @@ class Snake(Apps.App):
 
         return spawnLoc
 
+    def moveSnake(self, snakeArr, tilegrid, dir):
+        pass
+
+    def showSnake(self, turnArr, currPos, startPos, length, tileGrid): # length = int
+        drawArr = []
+        drawArr.append(currPos)
+        if turnArr != []:
+            drawArr.append(turnArr)
+        drawArr.append(startPos)
+
+        # totalCount = length
+        # drawArr = currPos].append(turnArr)
+        # draw
+        print(drawArr)
+
+        return
+
+
     def run(self):
         macropad = self.macropad
 
         gameBoard = [[0 for x in range(64)] for y in range(32)]
-        currPos = [32, 16]
 
         # setup for display
 
@@ -51,8 +68,13 @@ class Snake(Apps.App):
 
         board.DISPLAY.root_group = group # actually display the shit
 
-        tiles[currPos[0], currPos[1]] = 1 # start
+        currPos = [32, 16]
+        startPos = currPos.copy()
+
         snakeArr = [[currPos[0], currPos[1]]] # put initial location into the snake array
+        bendArr = []
+
+        snakeDir = 0
 
         while True:
             if macropad.encoder_switch == 1:
@@ -62,30 +84,42 @@ class Snake(Apps.App):
 
             oldPos  = currPos
 
-
             if key_event:
                 if key_event.pressed:
+                    bendArr.insert(0, currPos.copy())
                     if key_event.key_number == 1:
-                        currPos = [currPos[0], currPos[1]-1]
+                        snakeDir = 0
                         print("up")
                     if key_event.key_number == 3:
-                        currPos = [currPos[0]-1, currPos[1]]
+                        snakeDir = 3
                         print("left")
                     if key_event.key_number == 4:
-                        currPos = [currPos[0], currPos[1]+1]
+                        snakeDir = 2
                         print("down")
                     if key_event.key_number == 5:
-                        currPos = [currPos[0]+1, currPos[1]]
+                        snakeDir = 1
                         print("right")
+
+            if snakeDir == 0:
+                currPos[1] = currPos[1]-1
+            elif snakeDir == 1:
+                currPos[0] = currPos[0]+1
+            elif snakeDir == 2:
+                currPos[1] = currPos[1]+1
+            else:
+                currPos[0] = currPos[0]-1
 
             if currPos[0]<0 or currPos[0]>63 or currPos[1]<0 or currPos[1]>31:
                 break 
 
         
-            if not currPos == oldPos:
+            if not currPos == oldPos: # currently does the drawing for length 1
                 tiles[currPos[0], currPos[1]] = 1
                 tiles[oldPos[0], oldPos[1]] = 0
-            print(currPos)
+
+            self.showSnake(bendArr, currPos, startPos, 1, tiles)
+            time.sleep(0.2)
+            # print(bendArr)
 
 
 
