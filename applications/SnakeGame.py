@@ -24,20 +24,42 @@ class Snake(Apps.App):
 
         return spawnLoc
 
-    def moveSnake(self, snakeArr, tilegrid, dir):
-        pass
 
     def showSnake(self, turnArr, currPos, startPos, length, tileGrid): # length = int
         drawArr = []
         drawArr.append(currPos)
         if turnArr != []:
-            drawArr.append(turnArr)
+            drawArr.extend(turnArr) # extend adds elements of an array to another list, instead of just adding a whole array to the end
         drawArr.append(startPos)
 
-        # totalCount = length
-        # drawArr = currPos].append(turnArr)
-        # draw
-        print(drawArr)
+        drawColor = 1
+        count = 1
+
+        for i in range(len(drawArr)-1):
+            startPoint = drawArr[i]
+            endPoint = drawArr[i+1]
+
+            tempLoc = drawArr[0]
+
+            while tempLoc != endPoint: # if it gets to drawing the end point, stop
+                if (count>length):
+                    drawColor = 0
+
+                difX = drawArr[i+1][0]-drawArr[i][0]
+                print(f"x dif is {difX}")
+                difY = drawArr[i+1][1]-drawArr[i][1]
+
+                tempLoc[0] = tempLoc[0] + difX
+                tempLoc[1] = tempLoc[1] + difY
+
+                print(tempLoc)
+                print(endPoint)
+
+            # make unified equation for printing the points onto tilegrid
+
+
+
+        # print(drawArr)
 
         return
 
