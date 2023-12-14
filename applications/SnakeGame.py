@@ -13,9 +13,10 @@ class Snake(Apps.App):
 
     def foodLoc(self, snakeArr):
         foundUnique = False
+        spawnLoc = [0,0]
 
         while not foundUnique:
-            spawnLoc = [randint(0,63), randint(0,31)]
+            spawnLoc = [random.randint(0,63), random.randint(0,31)]
 
             for i in snakeArr:
                 if spawnLoc != i:
@@ -24,6 +25,18 @@ class Snake(Apps.App):
 
         return spawnLoc
 
+    def snakeFoodCollision(self, headPos, food):
+        if headPos == food:
+            return True
+        else:
+            return False
+
+    def snakeSnakeCollision(self, headPos, snakeArr):
+        for i in snakeArr:
+            if snakeArr == headPos:
+                return True
+        
+        return False
 
     def showSnake(self, drawArr, darkArr, tileGrid): # length = int
 
@@ -74,7 +87,11 @@ class Snake(Apps.App):
 
         snakeDir = [0, -1]
 
-        snakeLength = 5;
+        snakeLength = 5
+        foodPos = self.foodLoc(bendArr)
+        print(f"initial food location is {foodPos}")
+
+        foodState = False
 
         while True:
             if macropad.encoder_switch == 1:
@@ -87,25 +104,25 @@ class Snake(Apps.App):
                     bendArr.insert(1, currPos.copy())
                     if key_event.key_number == 1:
                         snakeDir = [0, -1]
-                        print("up")
+                        # print("up")
                     if key_event.key_number == 3:
                         snakeDir = [-1, 0]
-                        print("left")
+                        # print("left")
                     if key_event.key_number == 4:
                         snakeDir = [0, +1]
-                        print("down")
+                        # print("down")
                     if key_event.key_number == 5:
                         snakeDir = [1, 0]
-                        print("right")
+                        # print("right")
                     if key_event.key_number == 10:
                         snakeLength = snakeLength + 10
-                        print("more")
+                        # print("more")
 
             currPos[0] = currPos[0]+snakeDir[0]
             currPos[1] = currPos[1]+snakeDir[1]
 
             if currPos[0]<0 or currPos[0]>63 or currPos[1]<0 or currPos[1]>31:
-                time.sleep(.25)
+                time.sleep(.5)
                 break 
             
             # print(f"curr pos = {currPos}")
@@ -115,6 +132,21 @@ class Snake(Apps.App):
             # print(f"bendArr = {bendArr}")
 
             self.showSnake(bendArr, darkArr, tiles)
+
+            if foodState:
+                tiles[foodPos[0], foodPos[1]] = 2
+                foodState = False
+            else:
+                tiles[foodPos[0], foodPos[1]] = 3
+                foodState = True
+
+            if self.snakeFoodCollision(currPos, foodPos):
+                snakeLength = snakeLength + 15
+                foodPos = self.foodLoc(bendArr)
+
+            if self.snakeSnakeCollision(currPos, bendArr):
+                time.sleep(.5)
+                break 
             
             time.sleep(0.05)
             # print(currPos)
