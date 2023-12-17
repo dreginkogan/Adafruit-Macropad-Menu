@@ -3,6 +3,7 @@ import board
 import Apps
 import time
 import random # random food location
+import adafruit_imageload
 
 ## instead of 1 pixel graphics, do 2x2 pixel tiles, so the food can look different
 
@@ -16,7 +17,7 @@ class Snake(Apps.App):
         spawnLoc = [0,0]
 
         while not foundUnique:
-            spawnLoc = [random.randint(0,63), random.randint(0,31)]
+            spawnLoc = [random.randint(0,31), random.randint(0,15)]
 
             for i in snakeArr:
                 if spawnLoc != i:
@@ -31,9 +32,9 @@ class Snake(Apps.App):
         else:
             return False
 
-    def snakeSnakeCollision(self, headPos, snakeArr):
-        for i in snakeArr:
-            if snakeArr == headPos:
+    def snakeSnakeCollision(self, snakeArr):
+        for j in range(1, len(snakeArr)):
+            if snakeArr[0] == snakeArr[j]:
                 return True
         
         return False
@@ -44,7 +45,7 @@ class Snake(Apps.App):
             tileGrid[j[0], j[1]] = 0
         
         for i in drawArr:
-            tileGrid[i[0], i[1]] = 1
+            tileGrid[i[0], i[1]] = 1 # something is causing an index error here
 
         return
 
@@ -52,46 +53,37 @@ class Snake(Apps.App):
     def run(self):
         macropad = self.macropad
 
-        gameBoard = [[0 for x in range(64)] for y in range(32)]
-
         # setup for display
 
         group = displayio.Group() # create group
-
-        bitmap = displayio.Bitmap(128, 64, 2)
-        bitmap[2,0] = 1
-        bitmap[3,0] = 1
-        bitmap[2,1] = 1
-        bitmap[3,1] = 1
-
-        bitmap[4,0] = 1
-        bitmap[5,1] = 1
-        bitmap[6,1] = 1
-        bitmap[7,0] = 1
-        # bitmap = displayio.OnDiskBitmap('/snakeSource.bmp')
 
         palette = displayio.Palette(2) #2 colors
         palette[0] = 0x000000 # set colors for pallete
         palette[1] = 0xFFFFFF
 
-        tiles = displayio.TileGrid(bitmap, pixel_shader=palette, width=64, height=32, tile_width=2, tile_height=2, default_tile=0) # create tile grid using bitmap and palette
+        bitmap, palette = adafruit_imageload.load("/snakeSource.bmp",
+                                          bitmap=displayio.Bitmap(128, 64, 2),
+                                          palette=palette)
+
+
+        tiles = displayio.TileGrid(bitmap, pixel_shader=palette, width=32, height=16, tile_width=4, tile_height=4, default_tile=0) # create tile grid using bitmap and palette
 
         group.append(tiles) # append tiles to group, to be displayed
 
         board.DISPLAY.root_group = group # actually display the shit
 
-        currPos = [32, 16]
+        currPos = [16, 8]
 
         # snakeArr = [[currPos[0], currPos[1]]] # put initial location into the snake array
-        bendArr = [currPos.copy(), [32, 17], [32, 18], [32, 19], [32, 20]]
+        bendArr = [currPos.copy(), [16, 9], [16, 10], [16, 11], [16, 12]]
 
         snakeDir = [0, -1]
 
         snakeLength = 5
         foodPos = self.foodLoc(bendArr)
-        print(f"initial food location is {foodPos}")
+        # print(f"initial food location is {foodPos}")
 
-        foodState = False
+        foodState = False # for animation
 
         while True:
             if macropad.encoder_switch == 1:
@@ -101,17 +93,17 @@ class Snake(Apps.App):
 
             if key_event:
                 if key_event.pressed:
-                    bendArr.insert(1, currPos.copy())
-                    if key_event.key_number == 1:
+                    # bendArr.insert(1, currPos.copy())
+                    if key_event.key_number == 1 and snakeDir[1] != 1:
                         snakeDir = [0, -1]
                         # print("up")
-                    if key_event.key_number == 3:
+                    if key_event.key_number == 3 and snakeDir[0] != 1:
                         snakeDir = [-1, 0]
                         # print("left")
-                    if key_event.key_number == 4:
-                        snakeDir = [0, +1]
+                    if key_event.key_number == 4 and snakeDir[1] != -1:
+                        snakeDir = [0, 1]
                         # print("down")
-                    if key_event.key_number == 5:
+                    if key_event.key_number == 5 and snakeDir[0] != -1:
                         snakeDir = [1, 0]
                         # print("right")
                     if key_event.key_number == 10:
@@ -121,7 +113,7 @@ class Snake(Apps.App):
             currPos[0] = currPos[0]+snakeDir[0]
             currPos[1] = currPos[1]+snakeDir[1]
 
-            if currPos[0]<0 or currPos[0]>63 or currPos[1]<0 or currPos[1]>31:
+            if currPos[0]<0 or currPos[0]>31 or currPos[1]<0 or currPos[1]>15:
                 time.sleep(.5)
                 break 
             
@@ -141,12 +133,12 @@ class Snake(Apps.App):
                 foodState = True
 
             if self.snakeFoodCollision(currPos, foodPos):
-                snakeLength = snakeLength + 15
+                snakeLength = snakeLength + 5
                 foodPos = self.foodLoc(bendArr)
 
-            if self.snakeSnakeCollision(currPos, bendArr):
+            if self.snakeSnakeCollision(bendArr):
                 time.sleep(.5)
                 break 
             
-            time.sleep(0.05)
+            time.sleep(0.06)
             # print(currPos)
