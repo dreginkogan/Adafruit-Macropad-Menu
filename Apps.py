@@ -2,7 +2,6 @@ import time
 from adafruit_macropad import MacroPad
 
 from rainbowio import colorwheel
-from adafruit_macropad import MacroPad
 
 import board
 
@@ -15,38 +14,6 @@ class App:
     def run(self):
         pass
 
-
-class imgTest(App): #this must be figured out
-    def __init__(self, macropad):
-        self.macropad = macropad
-        self.name = "Image Test"
-
-    def run(self):
-        macropad = self.macropad
-
-        splash = displayio.Group() # create group
-
-        #####
-
-        bitmap = displayio.Bitmap(128, 64, 2) #set bitmap size and number of colors
-        palette = displayio.Palette(2) #2 colors
-
-        palette[0] = 0x000000 # set colors for pallete
-        palette[1] = 0xFFFFFF
-
-        tile_grid = displayio.TileGrid(bitmap, pixel_shader=palette) # create tile grid using bitmap and palette
-        splash.append(tile_grid) # tiles 
-
-        board.DISPLAY.root_group = splash #set root group
-
-        while True:
-            if macropad.encoder_switch == 1:
-                break
-
-            bitmap.fill(1)
-            time.sleep(0.25)
-            bitmap.fill(0)
-            time.sleep(0.25)
 
 class aScale(App):
     def __init__(self, macropad):
@@ -159,37 +126,3 @@ class TicTacToe(App):
                         pass # do nothing
                 else: # no key is pressed
                     button_held = False
-
-class Sussy(App):
-    def __init__(self, macropad):
-        self.macropad = macropad
-        self.name = "sussy"
-
-    def run(self):
-        macropad = self.macropad
-
-        macropad.display_image("sussy.bmp")
-
-        poo = True
-        oldPoo = poo
-
-        while True:
-            if macropad.encoder_switch == 1:
-                break
-
-            key_event = macropad.keys.events.get()
-            if key_event and key_event.pressed and key_event.key_number == 0:
-                oldPoo = poo
-                poo = not poo
-                print("amog")
-                print(poo)
-
-            if poo != oldPoo:
-                if poo:
-                    macropad.display_image("sussy.bmp")
-                    print("your mame")
-                else:
-                    macropad.display_image("blinka.bmp")
-                    print("cindy is a meow meow")
-            oldPoo = poo
-            time.sleep(0.1)
