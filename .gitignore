@@ -9,3 +9,4 @@ __pychache__
 adafruit_macropad.mpy
 boot_out.txt
 settings.toml
+lib/

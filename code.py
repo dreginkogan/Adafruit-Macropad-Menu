@@ -9,11 +9,8 @@ macropad = MacroPad()
 
 applications = [
     Apps.TicTacToe(macropad),
-    Apps.Sussy(macropad),
     Apps.Snake(macropad),
-    Test.Tester(macropad),
     Apps.aScale(macropad),
-    Apps.imgTest(macropad),
     Conway.Conways(macropad),
 ]
 
