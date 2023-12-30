@@ -1,6 +1,5 @@
 import time
 import Apps
-import test
 import Conway
 
 from adafruit_macropad import MacroPad
