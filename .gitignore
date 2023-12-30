@@ -1,3 +1,11 @@
 .vscode
 fonts
 pyrightconfig.json
+.vscode
+.fseventsd
+__pychache__
+.metadata_never_index
+.Trashes
+adafruit_macropad.mpy
+boot_out.txt
+settings.toml
