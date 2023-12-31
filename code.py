@@ -1,6 +1,8 @@
 import time
 import Apps
 import Conway
+import Procedural
+import SnakeGame
 
 from adafruit_macropad import MacroPad
 
@@ -8,10 +10,12 @@ macropad = MacroPad()
 
 applications = [
     Apps.TicTacToe(macropad),
-    Apps.Snake(macropad),
+    SnakeGame.Snake(macropad),
     Apps.aScale(macropad),
     Conway.Conways(macropad),
+    Procedural.Procedural(macropad),
 ]
+
 
 
 def getIdx(offset: int) -> int:
