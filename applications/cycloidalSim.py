@@ -75,6 +75,45 @@ class CycloidalSim(Apps.App):
             for j in range(0, 361, 12):
                 pointList.append([centerX + cos(angle)*distFromCent + cos(j)*circleRad, centerY + sin(angle)*distFromCent + sin(j)*circleRad])
 
+    def inToNum(self, macropad): # if no input, the default value will be used instead
+        returnNum = ""
+        done = False
+
+        while not done:
+            key_event = macropad.keys.events.get()
+
+            if key_event:
+                if key_event.pressed:
+                    if key_event.key_number == 11:
+                        break
+                    elif key_event.key_number == 0:
+                        returnNum += "1"
+                    elif key_event.key_number == 1:
+                        returnNum += "2"
+                    elif key_event.key_number == 2:
+                        returnNum += "3"
+                    elif key_event.key_number == 3:
+                        returnNum += "4"
+                    elif key_event.key_number == 4:
+                        returnNum += "5"
+                    elif key_event.key_number == 5:
+                        returnNum += "6"
+                    elif key_event.key_number == 6:
+                        returnNum += "7"
+                    elif key_event.key_number == 7:
+                        returnNum += "8"
+                    elif key_event.key_number == 8:
+                        returnNum += "9"
+                    elif key_event.key_number == 9:
+                        returnNum += "."
+                    elif key_event.key_number == 10:
+                        returnNum += "0"
+        
+        if len(returnNum) == 0:
+            return -1
+
+        return float(returnNum) 
+
     def run(self):
         # pointList = [[0.2, 0.57], [37.37, 48.98], [128, 64], [129, 65], [87, 42.7]] # tests
 
@@ -101,8 +140,63 @@ class CycloidalSim(Apps.App):
         eccentricity = 1
         reduction = 14
         loadPinRadius = 3
+        numLoad = 5
+        loadDist = 12
 
         # =======================
+
+        # get input
+
+        text_lines = macropad.display_text(title="Enter Parameters")
+        text_lines.show()
+        
+        text_lines[0].text = "Cir pin radius: "
+        arg = self.inToNum(macropad) 
+
+        if arg != -1:
+            circlePinRadius = arg
+ 
+        text_lines[0].text = "Cir pin radius: " + str(circlePinRadius)
+
+        time.sleep(0.3)
+
+        # =======
+
+        text_lines[0].text = "pin radius: "
+        arg = self.inToNum(macropad) 
+
+        if arg != -1:
+            pinRadius = arg
+ 
+        text_lines[0].text = "Cir pin radius: " + str(pinRadius)
+
+        time.sleep(0.3)
+
+        # =======
+
+        text_lines[0].text = "eccentricity: "
+        arg = self.inToNum(macropad) 
+
+        if arg != -1:
+            eccentricity = arg
+ 
+        text_lines[0].text = "eccentricity: " + str(eccentricity)
+
+        time.sleep(0.3)
+
+        
+
+
+
+
+
+
+
+
+
+
+
+        # =============
 
         pointList = self.createPath(circlePinRadius, eccentricity, reduction, 63, 31)
 
@@ -111,7 +205,7 @@ class CycloidalSim(Apps.App):
         board.DISPLAY.root_group = group1
 
         # self.addHoles(bitmap1, loadPinRadius, eccentricity, 5, 63, 31, 12)
-        self.holes(pointList, loadPinRadius, eccentricity, 5, 63, 31, 12)
+        self.holes(pointList, loadPinRadius, eccentricity, numLoad, 63, 31, loadDist)
 
         self.pixelize(pointList, 128, 64)
 
