@@ -3,6 +3,7 @@ import Apps
 import Conway
 import Procedural
 import SnakeGame
+import cycloidalSim
 
 from adafruit_macropad import MacroPad
 
@@ -14,6 +15,7 @@ applications = [
     Apps.aScale(macropad),
     Conway.Conways(macropad),
     Procedural.Procedural(macropad),
+    cycloidalSim.CycloidalSim(macropad),
 ]
 
 
