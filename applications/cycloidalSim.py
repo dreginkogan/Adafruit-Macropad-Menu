@@ -184,17 +184,53 @@ class CycloidalSim(Apps.App):
 
         time.sleep(0.3)
 
-        
+        # =======
 
+        text_lines[0].text = "reduction: "
+        arg = self.inToNum(macropad) 
 
+        if arg != -1:
+            reduction = arg
+ 
+        text_lines[0].text = "reduction: " + str(reduction)
 
+        time.sleep(0.3)
 
+        # =======
 
+        text_lines[0].text = "loadPinRadius: "
+        arg = self.inToNum(macropad) 
 
+        if arg != -1:
+            loadPinRadius = arg
+ 
+        text_lines[0].text = "loadPinRadius: " + str(loadPinRadius)
 
+        time.sleep(0.3)
 
+        # =======
 
+        text_lines[0].text = "numLoad: "
+        arg = self.inToNum(macropad) 
 
+        if arg != -1:
+            numLoad = arg
+ 
+        text_lines[0].text = "numLoad: " + str(numLoad)
+
+        time.sleep(0.3)
+
+        # =======
+
+        text_lines[0].text = "loadDist: "
+        arg = self.inToNum(macropad) 
+
+        if arg != -1:
+            loadDist = arg
+ 
+        text_lines[0].text = "loadDist: " + str(loadDist)
+
+        time.sleep(0.3)
 
         # =============
 
