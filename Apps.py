@@ -14,7 +14,6 @@ class App:
     def run(self):
         pass
 
-
 class aScale(App):
     def __init__(self, macropad):
         self.macropad = macropad
